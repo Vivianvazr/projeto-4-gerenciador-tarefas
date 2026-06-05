@@ -20,3 +20,5 @@
 ## Executar testes
 
 npm test
+
+Projeto desenvolvido utilizando Git Flow.
