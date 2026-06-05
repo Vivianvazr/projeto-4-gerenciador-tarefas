@@ -1,11 +1,27 @@
-let tarefas = [];
-
-const input = document.getElementById("tarefaInput");
-const botaoAdicionar = document.getElementById("btnAdicionar");
+const input = document.getElementById("inputTarefa");
+const btnAdicionar = document.getElementById("btnAdicionar");
 const listaTarefas = document.getElementById("listaTarefas");
-const contador = document.getElementById("contador");
 
-botaoAdicionar.addEventListener("click", function () {
+const total = document.getElementById("total");
+const pendentes = document.getElementById("pendentes");
+const concluidas = document.getElementById("concluidas");
+
+let tarefas = [
+  { texto: "Estudar JavaScript", concluida: false },
+  { texto: "Fazer exercícios de lógica", concluida: true },
+  { texto: "Criar projeto com CRUD", concluida: false },
+  { texto: "Ler documentação do React", concluida: true }
+];
+
+btnAdicionar.addEventListener("click", adicionarTarefa);
+
+input.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    adicionarTarefa();
+  }
+});
+
+function adicionarTarefa() {
   const texto = input.value.trim();
 
   if (texto === "") {
@@ -18,35 +34,57 @@ botaoAdicionar.addEventListener("click", function () {
   });
 
   input.value = "";
-  listarTarefas();
-});
+  renderizarTarefas();
+}
 
-function listarTarefas() {
+function concluirTarefa(index) {
+  tarefas[index].concluida = !tarefas[index].concluida;
+  renderizarTarefas();
+}
+
+function excluirTarefa(index) {
+  tarefas.splice(index, 1);
+  renderizarTarefas();
+}
+
+function renderizarTarefas() {
   listaTarefas.innerHTML = "";
 
-  tarefas.forEach(function (tarefa, index) {
-    const li = document.createElement("li");
+  tarefas.forEach((tarefa, index) => {
+    const item = document.createElement("li");
 
-    const span = document.createElement("span");
-    span.textContent = tarefa.texto;
+    item.innerHTML = `
+      <button class="check ${tarefa.concluida ? "ativo" : ""}" onclick="concluirTarefa(${index})">
+        ${tarefa.concluida ? "✓" : ""}
+      </button>
 
-    if (tarefa.concluida) {
-      span.classList.add("concluida");
-    }
+      <span class="texto ${tarefa.concluida ? "finalizada" : ""}">
+        ${tarefa.texto}
+      </span>
 
-    const botaoConcluir = document.createElement("button");
-    botaoConcluir.textContent = "Concluir";
+      <span class="status ${tarefa.concluida ? "ok" : "pendente"}">
+        ${tarefa.concluida ? "Concluída" : "Pendente"}
+      </span>
 
-    botaoConcluir.addEventListener("click", function () {
-      tarefas[index].concluida = true;
-      listarTarefas();
-    });
+      <button class="lixeira" onclick="excluirTarefa(${index})">
+        🗑
+      </button>
+    `;
 
-    li.appendChild(span);
-    li.appendChild(botaoConcluir);
-
-    listaTarefas.appendChild(li);
+    listaTarefas.appendChild(item);
   });
 
-  contador.textContent = `Tarefas: ${tarefas.length}`;
+  atualizarResumo();
 }
+
+function atualizarResumo() {
+  const qtdTotal = tarefas.length;
+  const qtdConcluidas = tarefas.filter(tarefa => tarefa.concluida).length;
+  const qtdPendentes = qtdTotal - qtdConcluidas;
+
+  total.textContent = qtdTotal;
+  pendentes.textContent = qtdPendentes;
+  concluidas.textContent = qtdConcluidas;
+}
+
+renderizarTarefas();
