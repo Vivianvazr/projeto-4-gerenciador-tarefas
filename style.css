@@ -23,9 +23,7 @@ body {
   background: linear-gradient(135deg, #0d47a1, #1976d2);
   color: white;
   padding: 28px 42px;
-  display: flex;
-  align-items: center;
-  gap: 22px;
+  text-align: left;
 }
 
 .icone {
