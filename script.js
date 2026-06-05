@@ -1,60 +1,51 @@
-let lista = [];
+const tarefas = [];
 
-function atualizarTela() {
+const input = document.getElementById("tarefaInput");
+const botao = document.getElementById("btnAdicionar");
+const lista = document.getElementById("lista");
+const contador = document.getElementById("contador");
 
-  const ul =
-    document.getElementById("lista");
-
-  ul.innerHTML = "";
-
-  lista.forEach((tarefa, i) => {
-
-    const li =
-      document.createElement("li");
-
-    li.innerHTML = `
-      ${tarefa.texto}
-      <button onclick="concluir(${i})">
-        Concluir
-      </button>
-    `;
-
-    if (tarefa.concluida) {
-      li.style.textDecoration =
-        "line-through";
-    }
-
-    ul.appendChild(li);
-
-  });
-
-  document.getElementById("contador")
-    .innerText =
-      `Tarefas: ${lista.length}`;
-}
+botao.addEventListener("click", adicionar);
 
 function adicionar() {
+  const texto = input.value.trim();
 
-  const input =
-    document.getElementById("tarefaInput");
-
-  if (input.value.trim() === "") {
+  if (texto === "") {
+    alert("Digite uma tarefa!");
     return;
   }
 
-  lista.push({
-    texto: input.value,
+  tarefas.push({
+    texto: texto,
     concluida: false
   });
 
   input.value = "";
-
-  atualizarTela();
+  renderizar();
 }
 
-function concluir(i) {
+function concluir(indice) {
+  tarefas[indice].concluida = true;
+  renderizar();
+}
 
-  lista[i].concluida = true;
+function renderizar() {
+  lista.innerHTML = "";
 
-  atualizarTela();
+  tarefas.forEach((tarefa, indice) => {
+    const item = document.createElement("li");
+
+    if (tarefa.concluida) {
+      item.classList.add("concluida");
+    }
+
+    item.innerHTML = `
+      <span>${tarefa.texto}</span>
+      <button onclick="concluir(${indice})">Concluir</button>
+    `;
+
+    lista.appendChild(item);
+  });
+
+  contador.textContent = `Tarefas: ${tarefas.length}`;
 }
