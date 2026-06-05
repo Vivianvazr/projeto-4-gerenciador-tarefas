@@ -1,0 +1,24 @@
+{
+  "name": "projeto-4-gerenciador-tarefas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vivianvazr/projeto-4-gerenciador-tarefas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Vivianvazr/projeto-4-gerenciador-tarefas/issues"
+  },
+  "homepage": "https://github.com/Vivianvazr/projeto-4-gerenciador-tarefas#readme",
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}
