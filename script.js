@@ -1,60 +1,52 @@
-let lista = [];
+let tarefas = [];
 
-function atualizarTela() {
+const input = document.getElementById("tarefaInput");
+const botaoAdicionar = document.getElementById("btnAdicionar");
+const listaTarefas = document.getElementById("listaTarefas");
+const contador = document.getElementById("contador");
 
-  const ul =
-    document.getElementById("lista");
+botaoAdicionar.addEventListener("click", function () {
+  const texto = input.value.trim();
 
-  ul.innerHTML = "";
-
-  lista.forEach((tarefa, i) => {
-
-    const li =
-      document.createElement("li");
-
-    li.innerHTML = `
-      ${tarefa.texto}
-      <button onclick="concluir(${i})">
-        Concluir
-      </button>
-    `;
-
-    if (tarefa.concluida) {
-      li.style.textDecoration =
-        "line-through";
-    }
-
-    ul.appendChild(li);
-
-  });
-
-  document.getElementById("contador")
-    .innerText =
-      `Tarefas: ${lista.length}`;
-}
-
-function adicionar() {
-
-  const input =
-    document.getElementById("tarefaInput");
-
-  if (input.value.trim() === "") {
+  if (texto === "") {
     return;
   }
 
-  lista.push({
-    texto: input.value,
+  tarefas.push({
+    texto: texto,
     concluida: false
   });
 
   input.value = "";
+  listarTarefas();
+});
 
-  atualizarTela();
-}
+function listarTarefas() {
+  listaTarefas.innerHTML = "";
 
-function concluir(i) {
+  tarefas.forEach(function (tarefa, index) {
+    const li = document.createElement("li");
 
-  lista[i].concluida = true;
+    const span = document.createElement("span");
+    span.textContent = tarefa.texto;
 
-  atualizarTela();
+    if (tarefa.concluida) {
+      span.classList.add("concluida");
+    }
+
+    const botaoConcluir = document.createElement("button");
+    botaoConcluir.textContent = "Concluir";
+
+    botaoConcluir.addEventListener("click", function () {
+      tarefas[index].concluida = true;
+      listarTarefas();
+    });
+
+    li.appendChild(span);
+    li.appendChild(botaoConcluir);
+
+    listaTarefas.appendChild(li);
+  });
+
+  contador.textContent = `Tarefas: ${tarefas.length}`;
 }
