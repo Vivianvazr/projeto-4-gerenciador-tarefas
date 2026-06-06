@@ -1,25 +1,10 @@
-const input = document.getElementById("inputTarefa");
-const btnAdicionar = document.getElementById("btnAdicionar");
-const listaTarefas = document.getElementById("listaTarefas");
+let tarefas = [];
 
+const input = document.getElementById("inputTarefa");
+const listaTarefas = document.getElementById("listaTarefas");
 const total = document.getElementById("total");
 const pendentes = document.getElementById("pendentes");
 const concluidas = document.getElementById("concluidas");
-
-let tarefas = [
-  { texto: "Estudar JavaScript", concluida: false },
-  { texto: "Fazer exercícios de lógica", concluida: true },
-  { texto: "Criar projeto com CRUD", concluida: false },
-  { texto: "Ler documentação do React", concluida: true }
-];
-
-btnAdicionar.addEventListener("click", adicionarTarefa);
-
-input.addEventListener("keypress", function (event) {
-  if (event.key === "Enter") {
-    adicionarTarefa();
-  }
-});
 
 function adicionarTarefa() {
   const texto = input.value.trim();
@@ -38,12 +23,7 @@ function adicionarTarefa() {
 }
 
 function concluirTarefa(index) {
-  tarefas[index].concluida = !tarefas[index].concluida;
-  renderizarTarefas();
-}
-
-function excluirTarefa(index) {
-  tarefas.splice(index, 1);
+  tarefas[index].concluida = true;
   renderizarTarefas();
 }
 
@@ -51,16 +31,14 @@ function renderizarTarefas() {
   listaTarefas.innerHTML = "";
 
   tarefas.forEach((tarefa, index) => {
-    const item = document.createElement("li");
+    const li = document.createElement("li");
 
-    item.innerHTML = `
+    li.innerHTML = `
       <button class="check ${tarefa.concluida ? "ativo" : ""}" onclick="concluirTarefa(${index})">
         ${tarefa.concluida ? "✓" : ""}
       </button>
 
-      <span class="texto ${tarefa.concluida ? "finalizada" : ""}">
-        ${tarefa.texto}
-      </span>
+      <span class="texto">${tarefa.texto}</span>
 
       <span class="status ${tarefa.concluida ? "ok" : "pendente"}">
         ${tarefa.concluida ? "Concluída" : "Pendente"}
@@ -71,10 +49,15 @@ function renderizarTarefas() {
       </button>
     `;
 
-    listaTarefas.appendChild(item);
+    listaTarefas.appendChild(li);
   });
 
   atualizarResumo();
+}
+
+function excluirTarefa(index) {
+  tarefas.splice(index, 1);
+  renderizarTarefas();
 }
 
 function atualizarResumo() {

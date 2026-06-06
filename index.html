@@ -1,45 +1,78 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciador de Tarefas</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+let tarefas = [];
 
-  <main class="container">
-    <header class="topo">
-      <h1>Gerenciador de Tarefas</h1>
-    </header>
+function adicionarTarefa() {
+  const input = document.getElementById("inputTarefa");
+  const texto = input.value.trim();
 
-    <section class="conteudo">
-      <div class="card nova-tarefa">
-        <h2>Nova Tarefa</h2>
+  if (texto === "") {
+    return;
+  }
 
-        <div class="formulario">
-          <input id="inputTarefa" type="text" placeholder="Digite uma tarefa...">
-          <button id="btnAdicionar">Adicionar</button>
-        </div>
-      </div>
+  tarefas.push({
+    texto: texto,
+    concluida: false
+  });
 
-      <div class="area-titulo">
-        <h2>Suas Tarefas</h2>
+  input.value = "";
+  renderizarTarefas();
+}
 
-        <div class="resumo">
-          <span>Total: <strong id="total">0</strong> tarefas</span>
-          <span>|</span>
-          <span>Pendentes: <strong id="pendentes">0</strong></span>
-          <span>|</span>
-          <span>Concluídas: <strong id="concluidas">0</strong></span>
-        </div>
-      </div>
+function concluirTarefa(index) {
+  tarefas[index].concluida = true;
+  renderizarTarefas();
+}
 
-      <ul id="listaTarefas" class="lista"></ul>
+function excluirTarefa(index) {
+  tarefas.splice(index, 1);
+  renderizarTarefas();
+}
 
-    </section>
-  </main>
+function renderizarTarefas() {
+  const lista = document.getElementById("listaTarefas");
+  lista.innerHTML = "";
 
-  <script src="script.js"></script>
-</body>
-</html>
+  tarefas.forEach(function(tarefa, index) {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <button class="check ${tarefa.concluida ? "ativo" : ""}" onclick="concluirTarefa(${index})">
+        ${tarefa.concluida ? "✓" : ""}
+      </button>
+
+      <span class="texto">
+        ${tarefa.texto}
+      </span>
+
+      <span class="status ${tarefa.concluida ? "ok" : "pendente"}">
+        ${tarefa.concluida ? "Concluída" : "Pendente"}
+      </span>
+
+      <button class="lixeira" onclick="excluirTarefa(${index})">
+        🗑
+      </button>
+    `;
+
+    lista.appendChild(li);
+  });
+
+  atualizarResumo();
+}
+
+function atualizarResumo() {
+  const total = document.getElementById("total");
+  const pendentes = document.getElementById("pendentes");
+  const concluidas = document.getElementById("concluidas");
+
+  const qtdTotal = tarefas.length;
+  const qtdConcluidas = tarefas.filter(function(tarefa) {
+    return tarefa.concluida;
+  }).length;
+
+  const qtdPendentes = qtdTotal - qtdConcluidas;
+
+  total.textContent = qtdTotal;
+  pendentes.textContent = qtdPendentes;
+  concluidas.textContent = qtdConcluidas;
+}
+
+renderizarTarefas();
